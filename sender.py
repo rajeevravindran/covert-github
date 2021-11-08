@@ -1,11 +1,9 @@
 import random
 
 from github import Github
-from github.IssueComment import IssueComment
 
 import os
-from core import translateBinaryToGithubReactions, REACTIONS_LIST
-from collections import Counter
+from core import translateBinaryToGithubReactions, waitForSync
 from itertools import cycle
 from datetime import datetime
 
@@ -18,22 +16,19 @@ covert_user = g.get_user("covert-user")
 
 start_time = datetime.now()
 print(f"[X] Sending 64 bytes at {start_time}")
-covert_messages = ['{0:08b}'.format(random.randrange(0, i+1)) for i in range(64)]
+covert_messages = ["00000000"] + ['{0:08b}'.format(random.randrange(0, 64)) for i in range(64)]
 print(covert_messages)
-
-def waitForSync(sync_comment: IssueComment, content: str):
-    while True:
-        covert_sync_reaction = [reaction for reaction in sync_comment.get_reactions() if
-                                reaction.user == covert_user and reaction.content == content]
-        if len(covert_sync_reaction) == 1:
-            break
-
 
 for issue in repo.get_issues():
     if int(issue.comments) > 0:
         comments_list = issue.get_comments()
         bit_count = 0
+        isFirstFlag = True
         for covert_message, comment in zip(covert_messages, cycle(comments_list)):
+            if isFirstFlag:
+                waitForSync(comment, "+1", covert_user)
+                isFirstFlag = False
+                pass
             current_time = datetime.now()
             print(f"Sending #{bit_count} {covert_message} on {comment.body}", end="")
             all_reactions = comment.get_reactions()
@@ -42,7 +37,7 @@ for issue in repo.get_issues():
             # clear_covert_reactions = list((Counter(REACTIONS_LIST)-Counter(covert_reactions)).elements())
             for covert_reaction in covert_reactions:
                 comment.create_reaction(covert_reaction)
-            print(f", took {(datetime.now() - current_time).total_seconds()} secs")
+            print(f", took {(datetime.now() - current_time).total_seconds()} secs.")
             # for clear_cover_reaction in clear_covert_reactions:
             #     comment.delete_reaction()
             bit_count = bit_count + 1
