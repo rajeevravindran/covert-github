@@ -16,10 +16,11 @@ covert_user = g.get_user("covert-user")
 
 start_time = datetime.now()
 print(f"[X] Sending 64 bytes at {start_time}")
-covert_messages = ["00000000"] + ['{0:08b}'.format(random.randrange(0, 64)) for i in range(64)]
+covert_messages = ["00000000"] + ['{0:08b}'.format(random.randrange(0, 64)) for i in range(16)]
 print(covert_messages)
 
 for issue in repo.get_issues():
+    firstComment = None
     if int(issue.comments) > 0:
         comments_list = issue.get_comments()
         bit_count = 0
@@ -28,6 +29,7 @@ for issue in repo.get_issues():
             if isFirstFlag:
                 waitForSync(comment, "+1", covert_user)
                 isFirstFlag = False
+                firstComment = comment
                 pass
             current_time = datetime.now()
             print(f"Sending #{bit_count} {covert_message} on {comment.body}", end="")
@@ -41,6 +43,9 @@ for issue in repo.get_issues():
             # for clear_cover_reaction in clear_covert_reactions:
             #     comment.delete_reaction()
             bit_count = bit_count + 1
+        firstComment.create_reaction("-1")
+    [reaction.delete() for reaction in firstComment.get_reactions() if reaction.user == covert_user]
+
 current_time = datetime.now()
 print(f"[X] Sending 16 bytes completed at {current_time}")
 time_taken = (current_time - start_time).total_seconds()

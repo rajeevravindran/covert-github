@@ -23,6 +23,11 @@ def waitForSync(sync_comment: IssueComment, content: str, covert_github_user: Au
 
 
 def translateMessageToBinary(reactions: list):
+    """
+
+    :param reactions: ["laugh", "hooray", "confused"]
+    :return: binary_message : "10000011"
+    """
     message = ""
     for reaction in REACTIONS_LIST:
         if reaction in reactions:
