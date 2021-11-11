@@ -1,5 +1,7 @@
 from github.AuthenticatedUser import AuthenticatedUser
+from github.Issue import Issue
 from github.IssueComment import IssueComment
+from github.Repository import Repository
 
 REACTIONS_LIST = [
     "laugh",
@@ -43,3 +45,9 @@ def translateBinaryToGithubReactions(message: str):
         if message_bit == "1":
             parsed_reactions.append(reaction)
     return parsed_reactions
+
+
+def getBufferWideIssue(repo: Repository, buffer_length: int):
+    for issue in repo.get_issues():
+        if int(issue.comments) > buffer_length:
+            return issue
