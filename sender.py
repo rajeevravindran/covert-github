@@ -16,7 +16,7 @@ covert_user = g.get_user("covert-user")
 
 start_time = datetime.now()
 print(f"[X] Sending 64 bytes at {start_time}")
-text = "I must not fear. Fear is the mind-killer"
+text = "Hello World"
 covert_messages = ['{0:08b}'.format(ord(char)) for char in text]
 print(covert_messages)
 BUFFER_SIZE = 16
@@ -48,6 +48,8 @@ for covert_message_list in chunk_list(covert_messages, BUFFER_SIZE):
         #     comment.delete_reaction()
         bit_count = bit_count + 1
     firstComment.create_reaction("-1")
+
+firstComment.create_reaction("laugh")
 
 current_time = datetime.now()
 print(f"[X] Sending 16 bytes completed at {current_time}")
