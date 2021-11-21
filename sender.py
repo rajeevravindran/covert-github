@@ -16,16 +16,17 @@ covert_user = g.get_user("covert-user")
 
 start_time = datetime.now()
 print(f"[X] Sending 64 bytes at {start_time}")
-text = "Hello World"
+text = "Fate is fluid, but destiny is in the hands of men"
 covert_messages = ['{0:08b}'.format(ord(char)) for char in text]
 print(covert_messages)
 BUFFER_SIZE = 16
 
 issue = getBufferWideIssue(repo, BUFFER_SIZE)
 
-firstComment = None
 bit_count = 0
 comments_list = issue.get_comments()
+firstComment = comments_list[0]
+firstComment.create_reaction("heart")
 for covert_message_list in chunk_list(covert_messages, BUFFER_SIZE):
 
     isFirstFlag = True
@@ -34,7 +35,7 @@ for covert_message_list in chunk_list(covert_messages, BUFFER_SIZE):
             waitForSync(comment, "+1", covert_user)
             isFirstFlag = False
             firstComment = comment
-            pass
+            continue
         current_time = datetime.now()
         print(f"Sending #{bit_count} {covert_message} on {comment.body}", end="")
         all_reactions = comment.get_reactions()
