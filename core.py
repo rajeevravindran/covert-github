@@ -1,5 +1,9 @@
+from time import sleep
+
 from github.AuthenticatedUser import AuthenticatedUser
+from github.Issue import Issue
 from github.IssueComment import IssueComment
+from github.Repository import Repository
 
 REACTIONS_LIST = [
     "laugh",
@@ -14,12 +18,17 @@ REACTIONS_LIST = [
 
 
 def waitForSync(sync_comment: IssueComment, content: str, covert_github_user: AuthenticatedUser):
-    print(f"[X] Waiting for {content} flag")
+    print(f"[X] Waiting for {content} flag ", end="")
     while True:
+        print(".", end="")
+        sleep(2)
         covert_sync_reaction = [reaction for reaction in sync_comment.get_reactions() if
                                 reaction.user == covert_github_user and reaction.content == content]
         if len(covert_sync_reaction) == 1:
-            break
+            covert_sync_reaction[0].delete()
+            print("")
+            return
+
 
 
 def translateMessageToBinary(reactions: list):
@@ -43,3 +52,14 @@ def translateBinaryToGithubReactions(message: str):
         if message_bit == "1":
             parsed_reactions.append(reaction)
     return parsed_reactions
+
+
+def getBufferWideIssue(repo: Repository, buffer_length: int):
+    for issue in repo.get_issues():
+        if int(issue.comments) > buffer_length:
+            return issue
+
+
+def chunk_list(lst: list, n: int):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]

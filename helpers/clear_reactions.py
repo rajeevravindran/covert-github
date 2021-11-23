@@ -14,3 +14,5 @@ for issue in repo.get_issues():
         for comment in comments_list:
             all_reactions = comment.get_reactions()
             [reaction.delete() for reaction in all_reactions if reaction.user == covert_user]
+
+print(f"Current Rate Limit is {g.get_rate_limit()}")
