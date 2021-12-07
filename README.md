@@ -1,7 +1,15 @@
 # Covert Communication using Github Reactions
 
-This project sends and receives covert messages via Github reactions, where 8 Github reactions are used to modulate 8 bits of message at a time
+This is a covert channel capable of sending covert messages modulated as Github reaction emojis on Github comments
 
-## Project Status
+![Overview](docs/images/overview.png)
 
-`in-development`
+## Protocol
+
+![Protocol Diagram](docs/images/protocol.png)
+
+## Demo
+
+![Protocol Diagram](docs/images/demo.png)
+
+## Usage
